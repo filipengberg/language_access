@@ -1,0 +1,7 @@
+services:
+  language_access.event_subscriber:
+    class: Drupal\language_access\EventSubscriber\LanguageAccessEventSubscriber
+    arguments: ['@language_manager', '@current_route_match', '@current_user']
+    tags:
+      - { name: event_subscriber }
+

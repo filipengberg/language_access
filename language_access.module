@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * Implements hook_language_switch_links_alter()
+ */
+function language_access_language_switch_links_alter(&$links, $type, $path) {
+  $user =  \Drupal::currentUser();
+  $languages = Drupal::languageManager()->getLanguages();
+
+  foreach ($languages as $language) {
+    $id = $language->getId();
+    if (!$user->hasPermission('access language ' . $id)) {
+      if (isset($links[$id])) unset($links[$id]);
+    }
+  }
+}
