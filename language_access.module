@@ -1,4 +1,7 @@
 <?php
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_language_switch_links_alter()
@@ -13,4 +16,19 @@ function language_access_language_switch_links_alter(&$links, $type, $path) {
       if (isset($links[$id])) unset($links[$id]);
     }
   }
+}
+
+/**
+ * Implements hook_node_access().
+ */
+function language_access_node_access(NodeInterface $node, $op, AccountInterface $account) {
+  if ($op == 'view') {
+    /** @var Drupal\Core\Language\Language $language */
+    $language = $node->language();
+    if (!$account->hasPermission('access language ' . $language->getId())) {
+      return AccessResult::forbidden();
+    }
+  }
+
+  return AccessResult::neutral();
 }
